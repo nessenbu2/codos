@@ -1,0 +1,14 @@
+{
+  "name": "codos",
+  "version": "1.0.0",
+  "description": "dream the codies dream",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": ":3",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
