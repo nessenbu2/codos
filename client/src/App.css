@@ -36,3 +36,53 @@
     transform: rotate(360deg);
   }
 }
+
+.board {
+  text-align: center;
+}
+
+.tile {
+  margin: 20px;
+  width: 200px;
+  height: 150px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.selected-red {
+  background: red;
+  color: white;
+}
+
+.selected-blue {
+  background: blue;
+  color: white;
+}
+
+.selected-black {
+  background: black;
+  color: white;
+}
+
+.selected-gray {
+  background: gray;
+  color: white;
+}
+
+.score-board {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.score-red {
+  text-align: center;
+  color: red;
+  margin: 10px;
+}
+
+.score-blue {
+  text-align: center;
+  color: blue;
+  margin: 10px;
+}
