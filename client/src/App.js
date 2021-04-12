@@ -56,9 +56,6 @@ class Tile extends Component {
 }
 
 class Board extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   componentDidMount() {
     console.log("mounted");
