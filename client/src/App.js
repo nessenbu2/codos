@@ -61,7 +61,7 @@ class Board extends Component {
     console.log("mounted");
     this._isMounted = true;
     console.log("mounted");
-    const socket = socketIOClient("localhost:5000");
+    const socket = socketIOClient("10.0.0.238:5000");
     socket.on("BoardState", data => {
       if (this._isMounted) {
         let parsed= JSON.parse(data.codies);
