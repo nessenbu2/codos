@@ -37,7 +37,6 @@ export default class Codies {
     var blueTiles = [];
 
     // Which ever team goes first gets 9 words
-    console.log(words.slice(0, 9));
     if (redFirst) {
       words.slice(0, 9).forEach(word => redTiles.push(new Tile(word, "red")));
       words.slice(9, 17).forEach(word => blueTiles.push(new Tile(word, "blue")));

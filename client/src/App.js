@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
-import socketIOClient from 'socket.io-client';
 import './App.css';
+
+// TODO: try to reconnect on errors/disconnects
+const url = "ws://localhost:5432"
+const connection = new WebSocket(url);
 
 class Score extends Component {
   constructor(props) {
@@ -56,20 +59,15 @@ class Tile extends Component {
   render() {
     var className = "";
     if (this.state.isSpymaster) {
-      className = "tile " + (this.state.selected ? "selected-" + this.state.color : "not-selected")
-    } else {
       className = "tile " + (this.state.selected ? "selected-" + this.state.color : "spymaster-not-selected-" + this.state.color)
+    } else {
+      className = "tile " + (this.state.selected ? "selected-" + this.state.color : "not-selected")
     }
     return (
       <button
         className={className}
         onClick={async () => {
-          const options = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify({ player: "nick", word: this.state.value})
-          };
-          fetch('/update_board', options);
+          connection.send(JSON.stringify({ action: "click", player: "nick", word: this.state.value}));
           this.setState({selected: true})}
         }
       >
@@ -89,13 +87,13 @@ class Board extends Component {
 
   componentDidMount() {
     this._isMounted = true;
-    const socket = socketIOClient("10.0.0.238:5000");
-    socket.on("BoardState", data => {
+    connection.onmessage = message => {
+      console.log(message);
       if (this._isMounted) {
-        let parsed= JSON.parse(data.codies);
+        let parsed = JSON.parse(message.data);
         this.setState({ tiles: parsed.tiles})
       }
-    });
+    };
 
     // Call our fetch function below once the component mounts
     this.callBackendAPI()
@@ -161,13 +159,8 @@ class Board extends Component {
             <button
               className="reset-button"
               onClick={async () => {
-                const options = {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json'},
-                  body: JSON.stringify({ player: "nick"})
-                };
-                fetch('/reset_board', options)}
-              }
+                connection.send(JSON.stringify({ action: "reset", player: "nick"}))
+              }}
             >
               Reset Board
             </button>

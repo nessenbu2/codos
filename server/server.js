@@ -4,10 +4,11 @@ import Codies from './codies.js';
 
 const port = process.env.PORT || 5000;
 
+const WebSocket = require('ws');
+const wss = new WebSocket.Server({ port: 5432 });
+
 var codies = new Codies();
 
-var bodyParser = require('body-parser');
-var jsonParser = bodyParser.json();
 const app = require('express')();
 const server = require('http').createServer(app);
 
@@ -17,29 +18,29 @@ const io = require('socket.io')(server, {
   }
 });
 
-io.on("connection", (socket) => {
-  console.log("new connection");
+wss.on('connection', (ws) => {
+  ws.on('message', (message) => {
+    var obj = JSON.parse(message);
 
-  socket.on("disconnect", () => {
-    console.log("disconnected:");
+    if (obj.action === "click") {
+      codies.selectTile(obj.word, obj.player);
+    } else if (obj.action === "reset") {
+      codies.resetBoard();
+    }
+
+    wss.clients.forEach( client => {
+      if (client.readyState == WebSocket.OPEN) {
+        client.send(JSON.stringify(codies));
+      }
+    });
+
   });
 });
 
-// console.log that your server is up and running
 server.listen(port, () => console.log(`Listening on port ${port}`));
 
-// create a GET route
+// GET route for initial data because I Can't g
 app.get('/express_backend', (req, res) => {
   res.send({ codies: JSON.stringify(codies)});
 });
 
-app.post('/update_board', jsonParser, (req, res) => {
-  codies.selectTile(req.body.word, req.body.player);
-  io.emit("BoardState", {codies: JSON.stringify(codies)});
-  console.log(codies);
-});
-
-app.post('/reset_board', jsonParser, (req, res) => {
-  codies.resetBoard();
-  io.emit("BoardState", {codies: JSON.stringify(codies)});
-});
