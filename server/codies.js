@@ -87,5 +87,9 @@ export default class Codies {
       this.tiles[tileIndex].selected = true;
     }
   }
+
+ resetBoard(player_name) {
+   this.generateBoard();
+ }
 }
 

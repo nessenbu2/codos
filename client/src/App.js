@@ -151,12 +151,25 @@ class Board extends Component {
           <div className="board">
             {display}
             <button
-              className="reset-button"
+              className="toggle-spymaster-button"
               onClick={async () => {
                 this.setState({isSpymaster: !this.state.isSpymaster})}
               }
             >
-            Toggle Spymaster
+              Toggle Spymaster
+            </button>
+            <button
+              className="reset-button"
+              onClick={async () => {
+                const options = {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json'},
+                  body: JSON.stringify({ player: "nick"})
+                };
+                fetch('/reset_board', options)}
+              }
+            >
+              Reset Board
             </button>
           </div>
         </div>

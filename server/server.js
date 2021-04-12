@@ -38,3 +38,8 @@ app.post('/update_board', jsonParser, (req, res) => {
   io.emit("BoardState", {codies: JSON.stringify(codies)});
   console.log(codies);
 });
+
+app.post('/reset_board', jsonParser, (req, res) => {
+  codies.resetBoard();
+  io.emit("BoardState", {codies: JSON.stringify(codies)});
+});
