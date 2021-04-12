@@ -36,7 +36,8 @@ class Tile extends Component {
     this.state = {
       value: props.value,
       color: props.tileColor,
-      selected: props.selected
+      selected: props.selected,
+      isSpymaster: props.isSpymaster
     };
   }
 
@@ -47,14 +48,21 @@ class Tile extends Component {
     this.setState({
       value: props.value,
       color: props.tileColor,
-      selected: props.selected
+      selected: props.selected,
+      isSpymaster: props.isSpymaster
     });
   }
 
   render() {
+    var className = "";
+    if (this.state.isSpymaster) {
+      className = "tile " + (this.state.selected ? "selected-" + this.state.color : "not-selected")
+    } else {
+      className = "tile " + (this.state.selected ? "selected-" + this.state.color : "spymaster-not-selected-" + this.state.color)
+    }
     return (
       <button
-        className={"tile " + (this.state.selected ? "selected-" + this.state.color : "not-selected")}
+        className={className}
         onClick={async () => {
           const options = {
             method: 'POST',
@@ -72,6 +80,12 @@ class Tile extends Component {
 }
 
 class Board extends Component {
+  constructor() {
+    super();
+    this.state = {
+      isSpymaster: false
+    };
+  }
 
   componentDidMount() {
     this._isMounted = true;
@@ -111,11 +125,11 @@ class Board extends Component {
     var display = []
     var redCount = 0;
     var blueCount = 0;
-    if (this.state !== null) {
+    if (this.state.tiles !== undefined) {
       var index = 0;
       var row = [];
       for (const tile of this.state.tiles) {
-        row.push(<Tile value={tile.word} tileColor={tile.color} selected={tile.selected}/>)
+        row.push(<Tile isSpymaster={this.state.isSpymaster} value={tile.word} tileColor={tile.color} selected={tile.selected}/>)
         index++;
         if (index % 5 === 0) {
           display.push(<div className="board-row">{row}</div>);
@@ -136,6 +150,14 @@ class Board extends Component {
         <div className="game-area">
           <div className="board">
             {display}
+            <button
+              className="reset-button"
+              onClick={async () => {
+                this.setState({isSpymaster: !this.state.isSpymaster})}
+              }
+            >
+            Toggle Spymaster
+            </button>
           </div>
         </div>
       </div>
