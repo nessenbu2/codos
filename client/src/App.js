@@ -3,12 +3,28 @@ import socketIOClient from 'socket.io-client';
 import './App.css';
 
 class Score extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      redCount: props.redCount,
+      blueCount: props.blueCount
+    };
+  }
+
+  // See the TODO below in the Tile component :3
+  componentWillReceiveProps(props) {
+    this.setState({
+      redCount: props.redCount,
+      blueCount: props.blueCount
+    });
+  }
+
   render() {
     return (
       <div className="score-board">
-        <h1 className="score-red">8</h1>
+        <h1 className="score-red">{this.state.redCount}</h1>
         <h1> - </h1>
-        <h1 className="score-blue">9</h1>
+        <h1 className="score-blue">{this.state.blueCount}</h1>
       </div>
     );
   }
@@ -58,15 +74,12 @@ class Tile extends Component {
 class Board extends Component {
 
   componentDidMount() {
-    console.log("mounted");
     this._isMounted = true;
-    console.log("mounted");
     const socket = socketIOClient("10.0.0.238:5000");
     socket.on("BoardState", data => {
       if (this._isMounted) {
         let parsed= JSON.parse(data.codies);
         this.setState({ tiles: parsed.tiles})
-        console.log(parsed);
       }
     });
 
@@ -75,13 +88,11 @@ class Board extends Component {
       .then(res => {
         let data = JSON.parse(res.codies);
         this.setState({ tiles: data.tiles})
-        console.log(JSON.parse(res.codies));
       })
       .catch(err => console.log(err));
   }
 
   componentWillUnmount() {
-    console.log("unmounted");
     this._isMounted = false;
   }
 
@@ -98,6 +109,8 @@ class Board extends Component {
 
   render() {
     var display = []
+    var redCount = 0;
+    var blueCount = 0;
     if (this.state !== null) {
       var index = 0;
       var row = [];
@@ -108,12 +121,22 @@ class Board extends Component {
           display.push(<div className="board-row">{row}</div>);
           row = [];
         }
+        if (!tile.selected) {
+          if (tile.color === "blue") {
+            blueCount = blueCount + 1;
+          } else if (tile.color === "red") {
+            redCount++;
+          }
+        }
       }
     }
     return (
-      <div className="game-area">
-        <div className="board">
-          {display}
+      <div>
+        <Score blueCount={blueCount} redCount={redCount}/>
+        <div className="game-area">
+          <div className="board">
+            {display}
+          </div>
         </div>
       </div>
     );
@@ -124,7 +147,6 @@ class App extends Component {
   render() {
     return (
       <div className="Codos">
-        <Score />
         <Board />
       </div>
     );
