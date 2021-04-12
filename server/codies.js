@@ -51,8 +51,6 @@ export default class Codies {
 
     var blackTiles = [new Tile(words[24], "black")];
     this.tiles = shuffleArray(redTiles.concat(blueTiles, grayTiles, blackTiles));
-
-    console.log(this.tiles);
   }
 
   constructor() {
@@ -83,7 +81,11 @@ export default class Codies {
     }
   }
 
-  selectTile(x, y, player_name) {
+  selectTile(word, player_name) {
+    const tileIndex = this.tiles.findIndex(tile => tile.word === word);
+    if (tileIndex > -1) {
+      this.tiles[tileIndex].selected = true;
+    }
   }
 }
 
