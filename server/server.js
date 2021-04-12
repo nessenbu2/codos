@@ -25,10 +25,6 @@ io.on("connection", (socket) => {
   });
 });
 
-const getApiAndEmit = socket => {
-  socket.emit("StateUpdated", {codies: JSON.stringify(codies)});
-}
-
 // console.log that your server is up and running
 server.listen(port, () => console.log(`Listening on port ${port}`));
 
