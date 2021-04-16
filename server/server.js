@@ -5,7 +5,7 @@ import Codies from './codies.js';
 const port = process.env.PORT || 5000;
 
 const WebSocket = require('ws');
-const wss = new WebSocket.Server({ port: 5432 });
+const wss = new WebSocket.Server({ port: 5001 });
 
 var codies = new Codies();
 
@@ -19,6 +19,7 @@ const io = require('socket.io')(server, {
 });
 
 wss.on('connection', (ws) => {
+  ws.send(JSON.stringify(codies));
   ws.on('message', (message) => {
     var obj = JSON.parse(message);
 

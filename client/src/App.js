@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 
 // TODO: try to reconnect on errors/disconnects
-const url = "ws://localhost:5432"
+const url = "ws://codos.nessenbu.com:5001"
 const connection = new WebSocket(url);
 
 class Score extends Component {
@@ -88,7 +88,6 @@ class Board extends Component {
   componentDidMount() {
     this._isMounted = true;
     connection.onmessage = message => {
-      console.log(message);
       if (this._isMounted) {
         let parsed = JSON.parse(message.data);
         this.setState({ tiles: parsed.tiles})

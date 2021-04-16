@@ -2,7 +2,7 @@
   "name": "codos",
   "version": "1.0.0",
   "description": "dream the codies dream",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
@@ -16,6 +16,9 @@
     "express": "^4.17.1",
     "node-csv": "^0.1.2",
     "socket.io": "^4.0.1"
+  },
+  "engines": {
+    "node": ">= 12.0.0"
   },
   "keywords": []
 }
