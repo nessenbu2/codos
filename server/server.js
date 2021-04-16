@@ -38,9 +38,3 @@ wss.on('connection', (ws) => {
 });
 
 server.listen(port, () => console.log(`Listening on port ${port}`));
-
-// GET route for initial data because I Can't g
-app.get('/express_backend', (req, res) => {
-  res.send({ codies: JSON.stringify(codies)});
-});
-

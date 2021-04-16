@@ -94,30 +94,11 @@ class Board extends Component {
         this.setState({ tiles: parsed.tiles})
       }
     };
-
-    // Call our fetch function below once the component mounts
-    this.callBackendAPI()
-      .then(res => {
-        let data = JSON.parse(res.codies);
-        this.setState({ tiles: data.tiles})
-      })
-      .catch(err => console.log(err));
   }
 
   componentWillUnmount() {
     this._isMounted = false;
   }
-
-  // Fetches our GET route from the Express server. (Note the route we are fetching matches the GET route from server.js
-  callBackendAPI = async () => {
-    const response = await fetch('/express_backend');
-    const body = await response.json();
-
-    if (response.status !== 200) {
-      throw Error(body.message) 
-    }
-    return body;
-  };
 
   render() {
     var display = []
