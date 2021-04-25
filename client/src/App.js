@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 
 // TODO: try to reconnect on errors/disconnects
-const url = "ws://codos.nessenbu.com:5001"
+const url = "ws://localhost:5001"
 const connection = new WebSocket(url);
 
 class Score extends Component {
