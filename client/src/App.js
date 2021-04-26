@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import './App.css';
 
 // TODO: try to reconnect on errors/disconnects
-const url = process.env.SERVER ? "ws://codos.nessenbu.com:5001" : "ws://localhost:5001"
+const url = process.env.NODE_ENV === 'development' ? "ws://localhost:5001" : "ws://codos.nessenbu.com:5001";
+console.log(url);
+console.log(process.env.NODE_ENV);
 const connection = new WebSocket(url);
 
 class Score extends Component {

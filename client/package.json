@@ -12,9 +12,8 @@
     "web-vitals": "^1.1.1"
   },
   "scripts": {
-    "start": "SERVER=false && react-scripts start",
-    "build": "react-scripts build",
-    "server": "SERVER=true && react-scripts start"
+    "start": "react-scripts start",
+    "build": "react-scripts build"
   },
   "eslintConfig": {
     "extends": [
