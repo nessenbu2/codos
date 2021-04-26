@@ -1,5 +1,7 @@
 # Running this thing locally
 
+Run `npm i` first. I think it installs everything
+
 You need to run 2 processes. IDK if it's possible to serve the react app from
 the express app. It probably is but I'm not great at web dev.  
 
