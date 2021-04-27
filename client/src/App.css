@@ -11,46 +11,46 @@
 }
 
 .not-selected {
-  background: white;
+  background: #e3e3e3;
 }
 
 .selected-red {
-  background: red;
-  color: white;
-}
-
-.spymaster-not-selected-red {
-  background: #f29083;
-  color: white;
-}
-
-.spymaster-not-selected-blue {
-  background: #8388f2;
-  color: white;
-}
-
-.spymaster-not-selected-black {
-  background: #4c4c54;
-  color: white;
-}
-
-.spymaster-not-selected-gray {
-  background: #c6c7cf;
+  background: var(--codos-red);
   color: white;
 }
 
 .selected-blue {
-  background: blue;
+  background: var(--codos-blue);
   color: white;
 }
 
 .selected-black {
-  background: black;
+  background: var(--codos-black);
   color: white;
 }
 
 .selected-gray {
-  background: gray;
+  background: var(--codos-gray);
+  color: white;
+}
+
+.spymaster-not-selected-red {
+  background: var(--spymaster-red);
+  color: white;
+}
+
+.spymaster-not-selected-blue {
+  background: var(--spymaster-blue);
+  color: white;
+}
+
+.spymaster-not-selected-black {
+  background: var(--spymaster-black);
+  color: white;
+}
+
+.spymaster-not-selected-gray {
+  background: var(--spymaster-gray);
   color: white;
 }
 
@@ -62,13 +62,22 @@
 
 .score-red {
   text-align: center;
-  color: red;
+  color: var(--codos-red);
   margin: 10px;
 }
 
 .score-blue {
   text-align: center;
-  color: blue;
+  color: var(--codos-blue);
   margin: 10px;
 }
 
+.score-dash {
+  color: var(--spymaster-gray);
+}
+
+.toggle-button {
+  position: absolute;
+  right: 10px;
+  padding: 5px;
+}
