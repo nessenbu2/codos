@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import DarkModeButton from './colors.js';
 import './App.css';
 
 // TODO: try to reconnect on errors/disconnects
@@ -26,7 +27,7 @@ class Score extends Component {
     return (
       <div className="score-board">
         <h1 className="score-red">{this.state.redCount}</h1>
-        <h1> - </h1>
+        <h1 className="score-dash"> - </h1>
         <h1 className="score-blue">{this.state.blueCount}</h1>
       </div>
     );
@@ -154,7 +155,10 @@ class Board extends Component {
 class App extends Component {
   render() {
     return (
-      <div className="Codos">
+      <div className="codos">
+        <div className="toggle-button">
+          <DarkModeButton />
+        </div>
         <Board />
       </div>
     );
