@@ -91,7 +91,10 @@ class Board extends Component {
     connection.onmessage = message => {
       if (this._isMounted) {
         let parsed = JSON.parse(message.data);
-        this.setState({ tiles: parsed.tiles})
+        this.setState({
+          tiles: parsed.tiles,
+          isSpymaster: parsed.isSpymaster,
+        });
       }
     };
   }
