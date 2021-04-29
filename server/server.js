@@ -27,6 +27,7 @@ wss.on('connection', (ws) => {
       codies.selectTile(obj.word, obj.player);
     } else if (obj.action === "reset") {
       codies.resetBoard();
+      codies.resetSpymaster();
     }
 
     wss.clients.forEach( client => {

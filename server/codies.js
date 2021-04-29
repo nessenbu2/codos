@@ -55,6 +55,7 @@ export default class Codies {
   constructor() {
     this.redTeam = [];
     this.blue_team = [];
+    this.isSpymaster = false;
     this.generateBoard();
   }
 
@@ -87,8 +88,12 @@ export default class Codies {
     }
   }
 
- resetBoard(player_name) {
+ resetBoard() {
    this.generateBoard();
+ }
+
+ resetSpymaster() {
+   this.isSpymaster = false;
  }
 }
 
