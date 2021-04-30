@@ -42,7 +42,6 @@ class Tile extends Component {
       color: props.tileColor,
       selected: props.selected,
       isSpymaster: props.isSpymaster,
-      playerId: props.playerId,
     };
   }
 
@@ -69,7 +68,7 @@ class Tile extends Component {
       <button
         className={className}
         onClick={async () => {
-          connection.send(JSON.stringify({ action: "click", playerId: this.state.playerId, word: this.state.value}));
+          connection.send(JSON.stringify({ action: "click", word: this.state.value}));
           this.setState({selected: true})}
         }
       >
@@ -118,7 +117,6 @@ class Board extends Component {
           value={tile.word}
           tileColor={tile.color}
           selected={tile.selected}
-          playerId={this.state.playerId}
         />)
         index++;
         if (index % 5 === 0) {
