@@ -41,7 +41,8 @@ class Tile extends Component {
       value: props.value,
       color: props.tileColor,
       selected: props.selected,
-      isSpymaster: props.isSpymaster
+      isSpymaster: props.isSpymaster,
+      playerId: props.playerId,
     };
   }
 
@@ -68,7 +69,7 @@ class Tile extends Component {
       <button
         className={className}
         onClick={async () => {
-          connection.send(JSON.stringify({ action: "click", player: "nick", word: this.state.value}));
+          connection.send(JSON.stringify({ action: "click", playerId: this.state.playerId, word: this.state.value}));
           this.setState({selected: true})}
         }
       >
@@ -91,7 +92,11 @@ class Board extends Component {
     connection.onmessage = message => {
       if (this._isMounted) {
         let parsed = JSON.parse(message.data);
-        this.setState({ tiles: parsed.tiles})
+        this.setState({
+          tiles: parsed.codies.tiles,
+          playerId: parsed.playerId,
+          isSpymaster: parsed.resetSpymasters ? false : this.state.isSpymaster,
+        });
       }
     };
   }
@@ -108,7 +113,13 @@ class Board extends Component {
       var index = 0;
       var row = [];
       for (const tile of this.state.tiles) {
-        row.push(<Tile isSpymaster={this.state.isSpymaster} value={tile.word} tileColor={tile.color} selected={tile.selected}/>)
+        row.push(<Tile
+          isSpymaster={this.state.isSpymaster}
+          value={tile.word}
+          tileColor={tile.color}
+          selected={tile.selected}
+          playerId={this.state.playerId}
+        />)
         index++;
         if (index % 5 === 0) {
           display.push(<div className="board-row">{row}</div>);
@@ -140,7 +151,7 @@ class Board extends Component {
             <button
               className="reset-button"
               onClick={async () => {
-                connection.send(JSON.stringify({ action: "reset", player: "nick"}))
+                connection.send(JSON.stringify({ action: "reset", playerId: this.state.playerId }))
               }}
             >
               Reset Board
