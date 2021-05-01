@@ -6,6 +6,33 @@ import './App.css';
 const url = process.env.NODE_ENV === 'development' ? "ws://localhost:5001" : "ws://codos.nessenbu.com:5001";
 const connection = new WebSocket(url);
 
+class UserNameModal extends Component {
+  constructor(props) {
+    super(props);
+    this.textInput = React.createRef();
+    this.handleClick = this.handleClick.bind(this);
+    this.callback = props.callback
+  }
+
+  handleClick = function() {
+    this.callback(this.textInput.current.value);
+  }
+
+  render() {
+    return (
+      <div className="user-name-prompt">
+        <p> Input ur name: </p>
+        <input type="text" ref={this.textInput}/><br/>
+        <input
+          type="button"
+          value="Submit"
+          onClick={ this.handleClick }
+        />
+      </div>
+    )
+  }
+}
+
 class Score extends Component {
   constructor(props) {
     super(props);
@@ -131,6 +158,12 @@ class Board extends Component {
           }
         }
       }
+    } else {
+      return(
+        // if the board isn't defined, we probably just haven't heard from the server yet.
+        // Don't render anything or you get a weird state where the board is empry
+        <div/>
+      );
     }
     return (
       <div>
@@ -162,13 +195,32 @@ class Board extends Component {
 }
 
 class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      playerName: ""
+    };
+    this.setPlayerName = this.setPlayerName.bind(this);
+  }
+
+  setPlayerName = function(name) {
+    connection.send(JSON.stringify({ action: "addPlayer", player: name}))
+    this.setState({playerName: name});
+  }
+
   render() {
+    var displayModal = this.state.playerName === "";
     return (
       <div className="codos">
         <div className="toggle-button">
           <DarkModeButton />
         </div>
-        <Board />
+        {displayModal &&
+          <UserNameModal callback={this.setPlayerName}/>
+        }
+        {!displayModal &&
+          <Board />
+        }
       </div>
     );
   }

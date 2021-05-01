@@ -54,16 +54,16 @@ export default class Codies {
 
   constructor() {
     this.redTeam = [];
-    this.blue_team = [];
+    this.blueTeam = [];
     this.generateBoard();
   }
 
-  addRedPlayer(player_name) {
-    this.redTeam.push(player_name);
-  }
-
-  addBluePlayer(player_name) {
-    this.blue_team.push(player_name);
+  addPlayer(player_name) {
+    if (this.redTeam.length > this.blueTeam.length) {
+        this.blueTeam.push(player_name);
+    } else {
+        this.redTeam.push(player_name);
+    }
   }
 
   removeRedPlayer(player_name) {
@@ -74,9 +74,9 @@ export default class Codies {
   }
 
   removeBluePlayer(player_name) {
-    const index = this.blue_team.indexOf(player_name);
+    const index = this.blueTeam.indexOf(player_name);
     if (index > -1) {
-      this.blue_team.splice(index, 1);
+      this.blueTeam.splice(index, 1);
     }
   }
 

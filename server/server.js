@@ -33,6 +33,10 @@ wss.on('connection', (ws) => {
     } else if (obj.action === "reset") {
       codies.resetBoard();
       resetSpymasters = true;
+    } else if (obj.action === "addPlayer") {
+      codies.addPlayer(obj.player);
+      client.send(JSON.stringify(codies));
+      console.log(JSON.stringify(codies));
     }
 
     wss.clients.forEach(client => {

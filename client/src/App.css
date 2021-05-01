@@ -81,3 +81,9 @@
   right: 10px;
   padding: 5px;
 }
+
+.user-name-prompt {
+  position: absolute;
+  top: 35%;
+  left: 45%;
+}
