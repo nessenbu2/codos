@@ -1,4 +1,5 @@
 import { createRequire } from 'module'
+import * as uuid from 'uuid';
 const require = createRequire(import.meta.url);
 import Codies from './codies.js';
 
@@ -19,22 +20,30 @@ const io = require('socket.io')(server, {
 });
 
 wss.on('connection', (ws) => {
-  ws.send(JSON.stringify(codies));
+  console.log('you are connected');
+  const playerId = uuid.v4();
+  // TODO: add user to a team in codies
+  ws.send(JSON.stringify({ codies, playerId }));
   ws.on('message', (message) => {
     var obj = JSON.parse(message);
 
+    let resetSpymasters = false;
     if (obj.action === "click") {
       codies.selectTile(obj.word, obj.player);
     } else if (obj.action === "reset") {
       codies.resetBoard();
+      resetSpymasters = true;
     }
 
-    wss.clients.forEach( client => {
+    wss.clients.forEach(client => {
       if (client.readyState == WebSocket.OPEN) {
-        client.send(JSON.stringify(codies));
+        client.send(JSON.stringify({
+          codies,
+          playerId,
+          resetSpymasters,
+        }));
       }
     });
-
   });
 });
 
