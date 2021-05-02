@@ -10,6 +10,14 @@
   cursor: pointer;
 }
 
+.tile-small-font {
+  margin: 20px;
+  width: 160px;
+  height: 105px;
+  font-size: 19px;
+  cursor: pointer;
+}
+
 .not-selected {
   background: #e3e3e3;
 }

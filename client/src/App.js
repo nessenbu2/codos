@@ -59,10 +59,15 @@ class Tile extends Component {
 
   render() {
     var className = "";
-    if (this.state.isSpymaster) {
-      className = "tile " + (this.state.selected ? "selected-" + this.state.color : "spymaster-not-selected-" + this.state.color)
+    if (this.state.value && this.state.value.length > 8) {
+      className += "tile-small-font ";
     } else {
-      className = "tile " + (this.state.selected ? "selected-" + this.state.color : "not-selected")
+      className += "tile ";
+    }
+    if (this.state.isSpymaster) {
+      className += (this.state.selected ? "selected-" + this.state.color : "spymaster-not-selected-" + this.state.color)
+    } else {
+      className += (this.state.selected ? "selected-" + this.state.color : "not-selected")
     }
     return (
       <button
