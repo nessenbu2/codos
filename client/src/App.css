@@ -1,5 +1,27 @@
 .board {
   text-align: center;
+  align:center;
+}
+
+.game-area {
+  display: block;
+}
+
+.players {
+  position: absolute;
+  padding-top: 200px;
+  padding-left: 150px;
+}
+
+.player-area {
+  text-align: center;
+}
+
+.player-area > div {
+  vertical-align: top;
+  display: inline-block;
+  padding-right: 5px;
+  padding-left: 5px;
 }
 
 .tile {

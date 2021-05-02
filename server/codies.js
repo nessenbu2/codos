@@ -26,6 +26,13 @@ class Tile {
   }
 }
 
+class Player {
+  constructor(name, id) {
+    this.name = name;
+    this.id = id;
+  }
+}
+
 export default class Codies {
   generateBoard() {
     // Shuffle the board
@@ -58,25 +65,23 @@ export default class Codies {
     this.generateBoard();
   }
 
-  addPlayer(player_name) {
+  addPlayer(playerName, playerId) {
     if (this.redTeam.length > this.blueTeam.length) {
-        this.blueTeam.push(player_name);
+        this.blueTeam.push(new Player(playerName, playerId));
     } else {
-        this.redTeam.push(player_name);
+        this.redTeam.push(new Player(playerName, playerId));
     }
   }
 
-  removeRedPlayer(player_name) {
-    const index = this.redTeam.indexOf(player_name);
+  removePlayer(playerId) {
+    const index = this.redTeam.findIndex(player => player.id === playerId);
     if (index > -1) {
       this.redTeam.splice(index, 1);
-    }
-  }
-
-  removeBluePlayer(player_name) {
-    const index = this.blueTeam.indexOf(player_name);
-    if (index > -1) {
-      this.blueTeam.splice(index, 1);
+    } else {
+      const index = this.blueTeam.findIndex(player => player.id === playerId);
+      if (index > -1) {
+        this.blueTeam.splice(index, 1);
+      }
     }
   }
 
@@ -87,8 +92,11 @@ export default class Codies {
     }
   }
 
- resetBoard(player_name) {
-   this.generateBoard();
- }
+  resetBoard(player_name) {
+    this.generateBoard();
+  }
+
+  randomizeTeams() {
+  }
 }
 

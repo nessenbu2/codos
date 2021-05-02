@@ -20,23 +20,33 @@ const io = require('socket.io')(server, {
 });
 
 wss.on('connection', (ws) => {
-  console.log('you are connected');
   const playerId = uuid.v4();
-  // TODO: add user to a team in codies
-  ws.send(JSON.stringify({ codies, playerId }));
+
+  ws.on('close', () => {
+    codies.removePlayer(playerId);
+    wss.clients.forEach(client => {
+      if (client.readyState == WebSocket.OPEN) {
+        const resetSpymasters = false;
+        client.send(JSON.stringify({
+          codies,
+          playerId,
+          resetSpymasters,
+        }));
+      }
+    });
+  });
+
   ws.on('message', (message) => {
     var obj = JSON.parse(message);
 
     let resetSpymasters = false;
     if (obj.action === "click") {
-      codies.selectTile(obj.word, obj.player);
+      codies.selectTile(obj.word, playerId);
     } else if (obj.action === "reset") {
       codies.resetBoard();
       resetSpymasters = true;
     } else if (obj.action === "addPlayer") {
-      codies.addPlayer(obj.player);
-      client.send(JSON.stringify(codies));
-      console.log(JSON.stringify(codies));
+      codies.addPlayer(obj.player, playerId);
     }
 
     wss.clients.forEach(client => {

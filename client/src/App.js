@@ -33,6 +33,49 @@ class UserNameModal extends Component {
   }
 }
 
+class Players extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      redPlayers: props.redPlayers === undefined ? [] : props.redPlayers,
+      bluePlayers: props.bluePlayers === undefined ? [] : props.bluePlayers
+    };
+  }
+
+  // See the TODO below in the Tile component :3
+  componentWillReceiveProps(props) {
+    this.setState({
+      redPlayers: props.redPlayers === undefined ? [] : props.redPlayers,
+      bluePlayers: props.bluePlayers === undefined ? [] : props.bluePlayers
+    });
+  }
+
+  render() {
+    var redPlayers = [];
+    var bluePlayers = [];
+
+    for (const player of this.state.redPlayers) {
+      redPlayers.push(<p className="score-red">{player.name}</p>);
+    }
+
+    for (const player of this.state.bluePlayers) {
+      bluePlayers.push(<p className="score-blue">{player.name}</p>);
+    }
+
+    return (
+      <div className="player-area">
+        <p> Players </p>
+        <div className="red-team">
+          {redPlayers}
+        </div>
+        <div className="blue-team">
+          {bluePlayers}
+        </div>
+      </div>
+    );
+  }
+}
+
 class Score extends Component {
   constructor(props) {
     super(props);
@@ -120,6 +163,8 @@ class Board extends Component {
         let parsed = JSON.parse(message.data);
         this.setState({
           tiles: parsed.codies.tiles,
+          redTeam: parsed.codies.redTeam,
+          blueTeam: parsed.codies.blueTeam,
           playerId: parsed.playerId,
           isSpymaster: parsed.resetSpymasters ? false : this.state.isSpymaster,
         });
@@ -170,6 +215,9 @@ class Board extends Component {
         <Score blueCount={blueCount} redCount={redCount}/>
         <div className="game-area">
           <div className="board">
+            <div className="players">
+              <Players redPlayers={this.state.redTeam} bluePlayers={this.state.blueTeam}/>
+            </div>
             {display}
             <button
               className="toggle-spymaster-button"
