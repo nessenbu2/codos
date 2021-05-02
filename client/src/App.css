@@ -109,3 +109,7 @@
   top: 35%;
   left: 45%;
 }
+
+.player-name-header {
+  color: var(--spymaster-gray);
+}

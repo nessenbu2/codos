@@ -38,8 +38,11 @@ class Players extends Component {
     super(props);
     this.state = {
       redPlayers: props.redPlayers === undefined ? [] : props.redPlayers,
-      bluePlayers: props.bluePlayers === undefined ? [] : props.bluePlayers
+      bluePlayers: props.bluePlayers === undefined ? [] : props.bluePlayers,
+      playerId: props.playerId
     };
+
+    this.swapTeams = this.swapTeams.bind(this);
   }
 
   // See the TODO below in the Tile component :3
@@ -48,6 +51,10 @@ class Players extends Component {
       redPlayers: props.redPlayers === undefined ? [] : props.redPlayers,
       bluePlayers: props.bluePlayers === undefined ? [] : props.bluePlayers
     });
+  }
+
+  swapTeams = () => {
+    connection.send(JSON.stringify({ action: "swapTeams", playerId: this.state.playerId}));
   }
 
   render() {
@@ -62,15 +69,23 @@ class Players extends Component {
       bluePlayers.push(<p className="score-blue">{player.name}</p>);
     }
 
+    const shuffleTeams = () => {
+      connection.send(JSON.stringify({ action: "shuffleTeams" }));
+    }
+
     return (
-      <div className="player-area">
-        <p> Players </p>
-        <div className="red-team">
-          {redPlayers}
+      <div>
+        <div className="player-area">
+          <h3 className="player-name-header"> Players </h3>
+          <div className="red-team">
+            {redPlayers}
+          </div>
+          <div className="blue-team">
+            {bluePlayers}
+          </div>
         </div>
-        <div className="blue-team">
-          {bluePlayers}
-        </div>
+        <button className="player-button" onClick={shuffleTeams}>Shuffle Teams</button>
+        <button className="player-button" onClick={this.swapTeams}>Swap Team</button>
       </div>
     );
   }
@@ -216,7 +231,11 @@ class Board extends Component {
         <div className="game-area">
           <div className="board">
             <div className="players">
-              <Players redPlayers={this.state.redTeam} bluePlayers={this.state.blueTeam}/>
+              <Players
+                playerId={this.state.playerId}
+                redPlayers={this.state.redTeam}
+                bluePlayers={this.state.blueTeam}
+              />
             </div>
             {display}
             <button

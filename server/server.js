@@ -47,6 +47,12 @@ wss.on('connection', (ws) => {
       resetSpymasters = true;
     } else if (obj.action === "addPlayer") {
       codies.addPlayer(obj.player, playerId);
+    } else if (obj.action === "shuffleTeams") {
+      codies.shuffleTeams();
+      codies.resetBoard();
+      resetSpymasters = true;
+    } else if (obj.action === "swapTeams") {
+      codies.swapTeams(obj.playerId);
     }
 
     wss.clients.forEach(client => {

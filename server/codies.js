@@ -17,6 +17,10 @@ function shuffleArray(arr) {
   return arr.sort(() => Math.random() - 0.5);
 }
 
+function findPlayer(playerId, playerArray) {
+  return playerArray.findIndex(player => player.id === playerId);
+}
+
 // Single tile on the board
 class Tile {
   constructor(word, color) {
@@ -26,6 +30,8 @@ class Tile {
   }
 }
 
+// Player object. No color since that is organized by
+// the board class itself
 class Player {
   constructor(name, id) {
     this.name = name;
@@ -74,29 +80,54 @@ export default class Codies {
   }
 
   removePlayer(playerId) {
-    const index = this.redTeam.findIndex(player => player.id === playerId);
+    const index = findPlayer(playerId, this.redTeam);
     if (index > -1) {
       this.redTeam.splice(index, 1);
     } else {
-      const index = this.blueTeam.findIndex(player => player.id === playerId);
+      const index = findPlayer(playerId, this.redTeam);
       if (index > -1) {
         this.blueTeam.splice(index, 1);
       }
     }
   }
 
-  selectTile(word, player_name) {
+  selectTile(word, playerName) {
     const tileIndex = this.tiles.findIndex(tile => tile.word === word);
     if (tileIndex > -1) {
       this.tiles[tileIndex].selected = true;
     }
   }
 
-  resetBoard(player_name) {
+  resetBoard() {
     this.generateBoard();
   }
 
-  randomizeTeams() {
+  shuffleTeams() {
+    var allPlayers = this.redTeam.concat(this.blueTeam);
+    var redTeamCount = allPlayers.length / 2;
+
+    if (allPlayers.length % 2 === 1) {
+      redTeamCount += Math.random() > 0.5 ? 1 : 0;
+    }
+
+    this.redTeam = allPlayers.slice(0, redTeamCount);
+    this.blueTeam = allPlayers.slice(redTeamCount);
+  }
+
+  swapTeams(playerId) {
+    const index = findPlayer(playerId, this.redTeam);
+    if (index > -1) {
+      var player = this.redTeam[index];
+      this.redTeam.splice(index, 1);
+      this.blueTeam.push(player);
+    } else {
+      const index = findPlayer(playerId, this.blueTeam);
+      if (index > -1) {
+        var player = this.blueTeam[index];
+        this.blueTeam.splice(index, 1);
+        this.redTeam.push(player);
+      }
+    }
   }
 }
 
