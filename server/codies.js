@@ -84,7 +84,7 @@ export default class Codies {
     if (index > -1) {
       this.redTeam.splice(index, 1);
     } else {
-      const index = findPlayer(playerId, this.redTeam);
+      const index = findPlayer(playerId, this.blueTeam);
       if (index > -1) {
         this.blueTeam.splice(index, 1);
       }
