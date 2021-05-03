@@ -104,6 +104,7 @@ export default class Codies {
 
   shuffleTeams() {
     var allPlayers = this.redTeam.concat(this.blueTeam);
+    shuffleArray(allPlayers);
     var redTeamCount = allPlayers.length / 2;
 
     if (allPlayers.length % 2 === 1) {
