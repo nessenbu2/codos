@@ -8,6 +8,7 @@ const require = createRequire(import.meta.url);
 // Used for reading CSVs. Is there a better way? Maybe!
 const fs = require('fs');
 const parse = require('csv-parse');
+const _ = require('lodash');
 
 // This defines the main game logic. Things like generating maps,
 // tracking players, tracking who's turn it is, and making updates
@@ -17,12 +18,25 @@ function shuffleArray(arr) {
   return arr.sort(() => Math.random() - 0.5);
 }
 
+function findPlayerIndex(playerId, playerArray) {
+  return playerArray.findIndex(player => player.id === playerId);
+}
+
 // Single tile on the board
 class Tile {
   constructor(word, color) {
     this.word = word;
     this.color = color;
     this.selected = false;
+  }
+}
+
+// Player object. No color since that is organized by
+// the board class itself
+class Player {
+  constructor(name, id) {
+    this.name = name;
+    this.id = id;
   }
 }
 
@@ -54,41 +68,61 @@ export default class Codies {
 
   constructor() {
     this.redTeam = [];
-    this.blue_team = [];
+    this.blueTeam = [];
     this.generateBoard();
   }
 
-  addRedPlayer(player_name) {
-    this.redTeam.push(player_name);
-  }
-
-  addBluePlayer(player_name) {
-    this.blue_team.push(player_name);
-  }
-
-  removeRedPlayer(player_name) {
-    const index = this.redTeam.indexOf(player_name);
-    if (index > -1) {
-      this.redTeam.splice(index, 1);
+  addPlayer(playerName, playerId) {
+    if (this.redTeam.length > this.blueTeam.length) {
+        this.blueTeam.push(new Player(playerName, playerId));
+    } else {
+        this.redTeam.push(new Player(playerName, playerId));
     }
   }
 
-  removeBluePlayer(player_name) {
-    const index = this.blue_team.indexOf(player_name);
-    if (index > -1) {
-      this.blue_team.splice(index, 1);
-    }
+  removePlayer(playerId) {
+    _.remove(this.redTeam, (player) => player.id === playerId);
+    _.remove(this.blueTeam, (player) => player.id === playerId);
   }
 
-  selectTile(word, player_name) {
+  selectTile(word, playerName) {
     const tileIndex = this.tiles.findIndex(tile => tile.word === word);
     if (tileIndex > -1) {
       this.tiles[tileIndex].selected = true;
     }
   }
 
- resetBoard(player_name) {
-   this.generateBoard();
- }
+  resetBoard() {
+    this.generateBoard();
+  }
+
+  shuffleTeams() {
+    var allPlayers = this.redTeam.concat(this.blueTeam);
+    shuffleArray(allPlayers);
+    var redTeamCount = allPlayers.length / 2;
+
+    if (allPlayers.length % 2 === 1) {
+      redTeamCount += Math.random() > 0.5 ? 1 : 0;
+    }
+
+    this.redTeam = allPlayers.slice(0, redTeamCount);
+    this.blueTeam = allPlayers.slice(redTeamCount);
+  }
+
+  swapTeams(playerId) {
+    const index = findPlayerIndex(playerId, this.redTeam);
+    if (index > -1) {
+      var player = this.redTeam[index];
+      this.redTeam.splice(index, 1);
+      this.blueTeam.push(player);
+    } else {
+      const index = findPlayerIndex(playerId, this.blueTeam);
+      if (index > -1) {
+        var player = this.blueTeam[index];
+        this.blueTeam.splice(index, 1);
+        this.redTeam.push(player);
+      }
+    }
+  }
 }
 

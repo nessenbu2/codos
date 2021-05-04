@@ -6,6 +6,83 @@ import './App.css';
 const url = process.env.NODE_ENV === 'development' ? "ws://localhost:5001" : "ws://codos.nessenbu.com:5001";
 const connection = new WebSocket(url);
 
+class UserNameModal extends Component {
+  constructor(props) {
+    super(props);
+    this.textInput = React.createRef();
+    this.handleClick = this.handleClick.bind(this);
+    this.callback = props.callback
+  }
+
+  handleClick = function() {
+    this.callback(this.textInput.current.value);
+  }
+
+  render() {
+    return (
+      <div className="user-name-prompt">
+        <p> Input ur name: </p>
+        <input type="text" ref={this.textInput}/><br/>
+        <input
+          type="button"
+          value="Submit"
+          onClick={ this.handleClick }
+        />
+      </div>
+    )
+  }
+}
+
+class Players extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      redPlayers: props.redPlayers === undefined ? [] : props.redPlayers,
+      bluePlayers: props.bluePlayers === undefined ? [] : props.bluePlayers,
+      playerId: props.playerId
+    };
+
+    this.swapTeams = this.swapTeams.bind(this);
+  }
+
+  // See the TODO below in the Tile component :3
+  componentWillReceiveProps(props) {
+    this.setState({
+      redPlayers: props.redPlayers === undefined ? [] : props.redPlayers,
+      bluePlayers: props.bluePlayers === undefined ? [] : props.bluePlayers
+    });
+  }
+
+  swapTeams = () => {
+    connection.send(JSON.stringify({ action: "swapTeams", playerId: this.state.playerId}));
+  }
+
+  render() {
+    const redPlayers = this.state.redPlayers.map(player => <p className="score-red">{player.name}</p>);
+    const bluePlayers = this.state.bluePlayers.map(player => <p className="score-blue">{player.name}</p>);
+
+    const shuffleTeams = () => {
+      connection.send(JSON.stringify({ action: "shuffleTeams" }));
+    }
+
+    return (
+      <div>
+        <div className="player-area">
+          <h3 className="player-name-header"> Players </h3>
+          <div className="red-team">
+            {redPlayers}
+          </div>
+          <div className="blue-team">
+            {bluePlayers}
+          </div>
+        </div>
+        <button className="player-button" onClick={shuffleTeams}>Shuffle Teams</button>
+        <button className="player-button" onClick={this.swapTeams}>Swap Team</button>
+      </div>
+    );
+  }
+}
+
 class Score extends Component {
   constructor(props) {
     super(props);
@@ -98,6 +175,8 @@ class Board extends Component {
         let parsed = JSON.parse(message.data);
         this.setState({
           tiles: parsed.codies.tiles,
+          redTeam: parsed.codies.redTeam,
+          blueTeam: parsed.codies.blueTeam,
           playerId: parsed.playerId,
           isSpymaster: parsed.resetSpymasters ? false : this.state.isSpymaster,
         });
@@ -130,18 +209,31 @@ class Board extends Component {
         }
         if (!tile.selected) {
           if (tile.color === "blue") {
-            blueCount = blueCount + 1;
+            blueCount++;
           } else if (tile.color === "red") {
             redCount++;
           }
         }
       }
+    } else {
+      return(
+        // if the board isn't defined, we probably just haven't heard from the server yet.
+        // Don't render anything or you get a weird state where the board is empry
+        <div/>
+      );
     }
     return (
       <div>
         <Score blueCount={blueCount} redCount={redCount}/>
         <div className="game-area">
           <div className="board">
+            <div className="players">
+              <Players
+                playerId={this.state.playerId}
+                redPlayers={this.state.redTeam}
+                bluePlayers={this.state.blueTeam}
+              />
+            </div>
             {display}
             <button
               className="toggle-spymaster-button"
@@ -167,13 +259,32 @@ class Board extends Component {
 }
 
 class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      playerName: ""
+    };
+    this.setPlayerName = this.setPlayerName.bind(this);
+  }
+
+  setPlayerName = function(name) {
+    connection.send(JSON.stringify({ action: "addPlayer", player: name}))
+    this.setState({playerName: name});
+  }
+
   render() {
+    var displayModal = this.state.playerName === "";
     return (
       <div className="codos">
         <div className="toggle-button">
           <DarkModeButton />
         </div>
-        <Board />
+        {displayModal &&
+          <UserNameModal callback={this.setPlayerName}/>
+        }
+        {!displayModal &&
+          <Board />
+        }
       </div>
     );
   }

@@ -1,5 +1,27 @@
 .board {
   text-align: center;
+  align:center;
+}
+
+.game-area {
+  display: block;
+}
+
+.players {
+  position: absolute;
+  padding-top: 200px;
+  padding-left: 90px;
+}
+
+.player-area {
+  text-align: center;
+}
+
+.player-area > div {
+  vertical-align: top;
+  display: inline-block;
+  padding-right: 5px;
+  padding-left: 5px;
 }
 
 .tile {
@@ -88,4 +110,14 @@
   position: absolute;
   right: 10px;
   padding: 5px;
+}
+
+.user-name-prompt {
+  position: absolute;
+  top: 35%;
+  left: 45%;
+}
+
+.player-name-header {
+  color: var(--spymaster-gray);
 }
