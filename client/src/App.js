@@ -204,7 +204,7 @@ class Board extends Component {
         }
         if (!tile.selected) {
           if (tile.color === "blue") {
-            blueCount = blueCount + 1;
+            blueCount++;
           } else if (tile.color === "red") {
             redCount++;
           }
