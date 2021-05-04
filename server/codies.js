@@ -8,6 +8,7 @@ const require = createRequire(import.meta.url);
 // Used for reading CSVs. Is there a better way? Maybe!
 const fs = require('fs');
 const parse = require('csv-parse');
+const _ = require('lodash');
 
 // This defines the main game logic. Things like generating maps,
 // tracking players, tracking who's turn it is, and making updates
@@ -17,7 +18,7 @@ function shuffleArray(arr) {
   return arr.sort(() => Math.random() - 0.5);
 }
 
-function findPlayer(playerId, playerArray) {
+function findPlayerIndex(playerId, playerArray) {
   return playerArray.findIndex(player => player.id === playerId);
 }
 
@@ -80,15 +81,8 @@ export default class Codies {
   }
 
   removePlayer(playerId) {
-    const index = findPlayer(playerId, this.redTeam);
-    if (index > -1) {
-      this.redTeam.splice(index, 1);
-    } else {
-      const index = findPlayer(playerId, this.blueTeam);
-      if (index > -1) {
-        this.blueTeam.splice(index, 1);
-      }
-    }
+    _.remove(this.redTeam, (player) => player.id === playerId);
+    _.remove(this.blueTeam, (player) => player.id === playerId);
   }
 
   selectTile(word, playerName) {
@@ -116,13 +110,13 @@ export default class Codies {
   }
 
   swapTeams(playerId) {
-    const index = findPlayer(playerId, this.redTeam);
+    const index = findPlayerIndex(playerId, this.redTeam);
     if (index > -1) {
       var player = this.redTeam[index];
       this.redTeam.splice(index, 1);
       this.blueTeam.push(player);
     } else {
-      const index = findPlayer(playerId, this.blueTeam);
+      const index = findPlayerIndex(playerId, this.blueTeam);
       if (index > -1) {
         var player = this.blueTeam[index];
         this.blueTeam.splice(index, 1);

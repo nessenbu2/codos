@@ -58,16 +58,8 @@ class Players extends Component {
   }
 
   render() {
-    var redPlayers = [];
-    var bluePlayers = [];
-
-    for (const player of this.state.redPlayers) {
-      redPlayers.push(<p className="score-red">{player.name}</p>);
-    }
-
-    for (const player of this.state.bluePlayers) {
-      bluePlayers.push(<p className="score-blue">{player.name}</p>);
-    }
+    const redPlayers = this.state.redPlayers.map(player => <p className="score-red">{player.name}</p>);
+    const bluePlayers = this.state.bluePlayers.map(player => <p className="score-blue">{player.name}</p>);
 
     const shuffleTeams = () => {
       connection.send(JSON.stringify({ action: "shuffleTeams" }));
