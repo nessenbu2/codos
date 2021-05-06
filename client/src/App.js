@@ -190,7 +190,6 @@ class Board extends Component {
           isSpymaster: parsed.resetSpymasters ? false : this.state.isSpymaster,
           activeTeamColor: parsed.codies.activeTeamColor
         });
-        console.log(this.state.playerId);
       }
     };
   }

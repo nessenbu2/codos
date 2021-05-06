@@ -26,7 +26,6 @@ wss.on('connection', (ws) => {
   sockets.set(ws, playerId);
 
   ws.on('close', () => {
-    console.log(sockets.size);
     codies.removePlayer(playerId);
     wss.clients.forEach(client => {
       if (client.readyState == WebSocket.OPEN) {
