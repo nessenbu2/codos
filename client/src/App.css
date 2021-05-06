@@ -29,7 +29,6 @@
   width: 160px;
   height: 105px;
   font-size: 24px;
-  cursor: pointer;
 }
 
 .tile-small-font {
@@ -37,11 +36,18 @@
   width: 160px;
   height: 105px;
   font-size: 19px;
+}
+
+.tile-not-clickable {
+  pointer-events: none;
+}
+
+.tile-clickable {
   cursor: pointer;
 }
 
 .not-selected {
-  background: #e3e3e3;
+  background: #cdcdcd;
 }
 
 .selected-red {

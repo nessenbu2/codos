@@ -19,10 +19,14 @@ const io = require('socket.io')(server, {
   }
 });
 
+const sockets = new Map();
+
 wss.on('connection', (ws) => {
   const playerId = uuid.v4();
+  sockets.set(ws, playerId);
 
   ws.on('close', () => {
+    console.log(sockets.size);
     codies.removePlayer(playerId);
     wss.clients.forEach(client => {
       if (client.readyState == WebSocket.OPEN) {
@@ -34,6 +38,13 @@ wss.on('connection', (ws) => {
         }));
       }
     });
+    for (let socket of sockets.keys()) {
+      // Hopefully removing an object from a map mid iteration
+      // doesn't break js maps :)
+      if (socket.readyState === WebSocket.CLOSED) {
+        sockets.delete(ws);
+      }
+    }
   });
 
   ws.on('message', (message) => {
@@ -57,6 +68,7 @@ wss.on('connection', (ws) => {
 
     wss.clients.forEach(client => {
       if (client.readyState == WebSocket.OPEN) {
+        const playerId = sockets.get(client);
         client.send(JSON.stringify({
           codies,
           playerId,

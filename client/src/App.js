@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import DarkModeButton from './colors.js';
+import _ from 'lodash';
 import './App.css';
 
 // TODO: try to reconnect on errors/disconnects
@@ -88,7 +89,7 @@ class Score extends Component {
     super(props);
     this.state = {
       redCount: props.redCount,
-      blueCount: props.blueCount
+      blueCount: props.blueCount,
     };
   }
 
@@ -96,7 +97,7 @@ class Score extends Component {
   componentWillReceiveProps(props) {
     this.setState({
       redCount: props.redCount,
-      blueCount: props.blueCount
+      blueCount: props.blueCount,
     });
   }
 
@@ -119,18 +120,20 @@ class Tile extends Component {
       color: props.tileColor,
       selected: props.selected,
       isSpymaster: props.isSpymaster,
+      active: props.active
     };
   }
 
   // TODO: I guess this is promotes poor coding practice according to the react devs.
   //       look into moving away from this later (but I finally got this to work, so
-  //     I'm leaving it for now: https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html
+  //       I'm leaving it for now: https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html
   componentWillReceiveProps(props) {
     this.setState({
       value: props.value,
       color: props.tileColor,
       selected: props.selected,
-      isSpymaster: props.isSpymaster
+      isSpymaster: props.isSpymaster,
+      active: props.active
     });
   }
 
@@ -140,6 +143,12 @@ class Tile extends Component {
       className += "tile-small-font ";
     } else {
       className += "tile ";
+    }
+
+    if (this.state.active) {
+      className += " tile-clickable ";
+    } else {
+      className += " tile-not-clickable ";
     }
     if (this.state.isSpymaster) {
       className += (this.state.selected ? "selected-" + this.state.color : "spymaster-not-selected-" + this.state.color)
@@ -179,7 +188,9 @@ class Board extends Component {
           blueTeam: parsed.codies.blueTeam,
           playerId: parsed.playerId,
           isSpymaster: parsed.resetSpymasters ? false : this.state.isSpymaster,
+          activeTeamColor: parsed.codies.activeTeamColor
         });
+        console.log(this.state.playerId);
       }
     };
   }
@@ -188,10 +199,24 @@ class Board extends Component {
     this._isMounted = false;
   }
 
+  shouldTilesBeClickable(activeTeamColor, redTeam, blueTeam, playerId) {
+    if (_.find(redTeam, (player) => player.id === playerId) !== undefined) {
+      return activeTeamColor === "RED";
+    } else {
+      return activeTeamColor === "BLUE";
+    }
+  }
+
   render() {
     var display = []
     var redCount = 0;
     var blueCount = 0;
+
+    var makeTilesClickable = this.shouldTilesBeClickable(this.state.activeTeamColor,
+                                                         this.state.redTeam,
+                                                         this.state.blueTeam,
+                                                         this.state.playerId);
+
     if (this.state.tiles !== undefined) {
       var index = 0;
       var row = [];
@@ -201,6 +226,7 @@ class Board extends Component {
           value={tile.word}
           tileColor={tile.color}
           selected={tile.selected}
+          active={makeTilesClickable}
         />)
         index++;
         if (index % 5 === 0) {
