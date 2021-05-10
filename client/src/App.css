@@ -38,11 +38,11 @@
   font-size: 19px;
 }
 
-.tile-not-clickable {
+.not-clickable {
   pointer-events: none;
 }
 
-.tile-clickable {
+.clickable {
   cursor: pointer;
 }
 

@@ -63,6 +63,8 @@ wss.on('connection', (ws) => {
       resetSpymasters = true;
     } else if (obj.action === "swapTeams") {
       codies.swapTeams(obj.playerId);
+    } else if (obj.action === "pass") {
+      codies.passTurn(obj.playerId);
     }
 
     wss.clients.forEach(client => {
