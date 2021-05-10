@@ -40,8 +40,22 @@ class Player {
   }
 }
 
+const TeamTurnEnum = Object.freeze({ "RED":"RED", "BLUE":"BLUE" });
+
 export default class Codies {
+
+  isPlayerTurn(playerId) {
+    const maybeRed = _.find(this.redTeam, (player) => player.id === playerId);
+    if (maybeRed != undefined) {
+      return this.activeTeamColor === "RED";
+    }
+    return this.activeTeamColor === "BLUE";
+  }
+
   generateBoard() {
+    this.winningTeam = undefined;
+    this.isComplete = false;
+
     // Shuffle the board
     var words = shuffleArray(BASE_WORDS);
 
@@ -49,6 +63,8 @@ export default class Codies {
     const redFirst = Math.random() > 0.5;
     var redTiles = [];
     var blueTiles = [];
+
+    this.activeTeamColor = redFirst ? TeamTurnEnum.RED : TeamTurnEnum.BLUE;
 
     // Which ever team goes first gets 9 words
     if (redFirst) {
@@ -85,15 +101,57 @@ export default class Codies {
     _.remove(this.blueTeam, (player) => player.id === playerId);
   }
 
-  selectTile(word, playerName) {
+  selectTile(word, playerId) {
+    if (this.isComplete) {
+      return;
+    }
+    // Don't allow clicks from non-active players. (might catch a race?)
+    if (!this.isPlayerTurn(playerId)) {
+      return;
+    }
     const tileIndex = this.tiles.findIndex(tile => tile.word === word);
     if (tileIndex > -1) {
+
       this.tiles[tileIndex].selected = true;
+      this.checkIfGameIsComplete();
+
+      if (this.tiles[tileIndex].color != this.activeTeamColor.toLowerCase()) {
+        this.activeTeamColor = this.activeTeamColor == "RED" ? "BLUE" : "RED";
+      }
+    }
+  }
+
+  checkIfGameIsComplete() {
+    var redCount = 0;
+    var blueCount = 0;
+
+    for (const tile of this.tiles) {
+      if (tile.color === "black" && tile.selected) {
+        this.isComplete = true;
+        this.winningTeam = this.activeTeamColor === "RED" ? "BLUE" : "RED";
+        return;
+      }
+      if (tile.color === "red" && !tile.selected) {
+        redCount++;
+      } else if (tile.color === "blue" && !tile.selected) {
+        blueCount++;
+      }
+    }
+    if (blueCount === 0 || redCount === 0) {
+      this.isComplete = true;
+      this.winningTeam = blueCount === 0 ? "BLUE" : "RED";
     }
   }
 
   resetBoard() {
     this.generateBoard();
+  }
+
+  passTurn(playerId) {
+    if (!this.isPlayerTurn(playerId)) {
+      return;
+    }
+    this.activeTeamColor = this.activeTeamColor === "RED" ? "BLUE" : "RED";
   }
 
   shuffleTeams() {
