@@ -291,6 +291,14 @@ class Board extends Component {
           activeTeamColor={this.state.activeTeamColor}
           winningTeam={this.state.winningTeam}/>
         <div className="game-area">
+          <button
+            className={swapTeamsClassName}
+            onClick={async () => {
+              connection.send(JSON.stringify({action: "pass", playerId: this.state.playerId }))
+            }}
+          >
+            Pass Turn
+          </button>
           <div className="board">
             <div className="players">
               <Players
@@ -299,32 +307,28 @@ class Board extends Component {
                 bluePlayers={this.state.blueTeam}
               />
             </div>
-            <button
-              className={swapTeamsClassName}
-              onClick={async () => {
-                connection.send(JSON.stringify({action: "pass", playerId: this.state.playerId }))
-              }}
-            >
-              Pass Turn
-            </button>
-            {display}
-            <button
-              className="clickable"
-              onClick={async () => {
-                this.setState({isSpymaster: !this.state.isSpymaster})}
-              }
-            >
-              Toggle Spymaster
-            </button>
-            <button
-              className="clickable"
-              onClick={async () => {
-                connection.send(JSON.stringify({ action: "reset", playerId: this.state.playerId }))
-              }}
-            >
-              Reset Board
-            </button>
+            <div className="tiles">
+              {display}
+            </div>
+            <div className="right">
+            </div>
           </div>
+          <button
+            className="clickable"
+            onClick={async () => {
+              this.setState({isSpymaster: !this.state.isSpymaster})}
+            }
+          >
+            Toggle Spymaster
+          </button>
+          <button
+            className="clickable"
+            onClick={async () => {
+              connection.send(JSON.stringify({ action: "reset", playerId: this.state.playerId }))
+            }}
+          >
+            Reset Board
+          </button>
         </div>
       </div>
     );

@@ -1,16 +1,23 @@
 .board {
-  text-align: center;
-  align:center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-items: center;
 }
 
 .game-area {
   display: block;
+  text-align: center;
+}
+
+.tiles {
 }
 
 .players {
-  position: absolute;
-  padding-top: 200px;
-  padding-left: 90px;
+  list-style-type: none;
+  margin-top: 200px;
+  margin-left: 50px;
+  margin-right: auto;
+  align-self: flex-start;
 }
 
 .player-area {
@@ -88,6 +95,10 @@
 .spymaster-not-selected-gray {
   background: var(--spymaster-gray);
   color: white;
+}
+
+.board-row {
+  white-space: nowrap;
 }
 
 .score-board {
