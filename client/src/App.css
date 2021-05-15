@@ -1,16 +1,19 @@
 .board {
-  text-align: center;
-  align:center;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
 }
 
 .game-area {
   display: block;
+  text-align: center;
 }
 
 .players {
-  position: absolute;
-  padding-top: 200px;
-  padding-left: 90px;
+  display: flex;
+  list-style-type: none;
+  margin-top: 200px;
+  margin-left: 50px;
 }
 
 .player-area {
